@@ -1,4 +1,38 @@
 from bcb import PTAX
+from pandas import to_datetime
+from datetime import datetime, timedelta
+from dateutil.parser import parse
+
+def check_if_datetime(any_day):
+    """"""
+    if not isinstance(any_day, datetime):
+        any_day = parse(any_day)
+    return any_day
+
+def first_day_of_month(any_day):
+    """
+    """
+    # check if any_day is a datetime object.
+    # if it is a string, convert to datetime.
+    any_day = check_if_datetime(any_day)
+    # replace the day part of the datetime
+    # object to 1.
+    return any_day.replace(day=1)
+
+def last_day_of_month(any_day):
+    """
+    function idea here https://stackoverflow.com/a/13565185
+    """
+    # check if any_day is a datetime object.
+    # if it is a string, convert to datetime.
+    any_day = check_if_datetime(any_day)
+
+    # The day 28 exists in every month. 4 days later, it's always next month
+    next_month_date = any_day.replace(day=28) + timedelta(days=4)
+
+    # subtracting the number of the current day brings us back one month
+    return next_month_date - timedelta(days=next_month_date.day)
+
 
 def obter_cotações(início='1/1/2023', fim='1/31/2023', moeda='USD'):
     """
@@ -40,4 +74,6 @@ def obter_cotações(início='1/1/2023', fim='1/31/2023', moeda='USD'):
                 'cotacaoCompra': 'cotação de compra',
                 'cotacaoVenda': 'cotação de venda'}
     df.rename(columns=col_nomes, inplace=True)
+    # transformar data e hora
+    df['data'] = to_datetime(df['data'])
     return df
