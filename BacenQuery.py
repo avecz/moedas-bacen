@@ -1,5 +1,5 @@
 from bcb import PTAX
-from pandas import to_datetime
+from pandas import to_datetime, concat
 from datetime import datetime, timedelta
 from dateutil.parser import parse
 
@@ -60,9 +60,9 @@ def obter_cotações(início='1/1/2023', fim='1/31/2023', moeda='USD'):
             df_temp = consultar_bacen(início, fim, moeda=m)
 
             if df is not None:
-                df = df.append(df_temp)
+                df = concat([df, df_temp])
             else:
-                df = df_temp
+                df = df_temp.copy()
 
     # filtrar apenas as cotações de fechamento
     df = df[df['tipoBoletim']=='Fechamento']
