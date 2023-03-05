@@ -33,6 +33,19 @@ def last_day_of_month(any_day):
     # subtracting the number of the current day brings us back one month
     return next_month_date - timedelta(days=next_month_date.day)
 
+def format_date_to_BacenAPI(any_day):
+    """
+    Take a datetime object, or any
+    string that could be parsed to
+    a datetime object and format it
+    to the format that the Bacen API
+    expects: month/day/year, without
+    leading zeros for month and day.
+    """
+    # check if any_day is a datetime object.
+    # if it is a string, convert to datetime.
+    any_day = check_if_datetime(any_day)
+    return str(any_day.month)+'/'+str(any_day.day)+'/'+str(any_day.year)
 
 def obter_cotações(início='1/1/2023', fim='1/31/2023', moeda='USD'):
     """
