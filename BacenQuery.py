@@ -88,5 +88,6 @@ def obter_cotações(início='1/1/2023', fim='1/31/2023', moeda='USD'):
                 'cotacaoVenda': 'cotação de venda'}
     df.rename(columns=col_nomes, inplace=True)
     # transformar data e hora
-    df['data'] = to_datetime(df['data'])
+    # found examples of duplicated rows in the last day of month
+    df.drop_duplicates(inplace=True)
     return df
