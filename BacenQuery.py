@@ -33,7 +33,7 @@ def last_day_of_month(any_day):
     # subtracting the number of the current day brings us back one month
     return next_month_date - timedelta(days=next_month_date.day)
 
-def format_date_to_BacenAPI(any_day):
+def format_date_to_BacenAPI(any_day=None):
     """
     Take a datetime object, or any
     string that could be parsed to
@@ -42,6 +42,9 @@ def format_date_to_BacenAPI(any_day):
     expects: month/day/year, without
     leading zeros for month and day.
     """
+    # check if a object was passed
+    if any_day is None:
+        any_day = datetime.now()
     # check if any_day is a datetime object.
     # if it is a string, convert to datetime.
     any_day = check_if_datetime(any_day)
