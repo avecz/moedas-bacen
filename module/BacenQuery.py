@@ -50,33 +50,37 @@ def format_date_to_BacenAPI(any_day=None):
     any_day = check_if_datetime(any_day)
     return str(any_day.month)+'/'+str(any_day.day)+'/'+str(any_day.year)
 
-def obter_cotações(início='1/1/2023', fim='1/31/2023', moeda='USD'):
+def get_exchange_rates(start=None, end=None, currency='USD'):
     """
-    Função que busca as cotações diárias de um intervalo determinado,
-    para uma [moeda] (por padrão 'USD').
-    É possível passar uma lista de moedas para obter as cotações de todas
-    em um DataFrame.
-    """
+    Fetching the daily exchange rates between a currency and BRL.
+    It is possible:
+    - to fetch a period by providing the 'end' parameter.
+    - to fetch several currencies, if provided a list
+      of strings.
+      Defaults to current day and BRL/USD.
 
-    def consultar_bacen(início, fim, moeda):
+    """
+    start = format_date_to_BacenAPI(start)
+    end = format_date_to_BacenAPI(end)
+
+    def query_API(start, end, currency):
         ep = PTAX().get_endpoint('CotacaoMoedaPeriodo')
         df_temp = (ep.query()
-            .parameters(moeda=moeda,
-            dataInicial=início,
-            dataFinalCotacao=fim).collect())
-        df_temp['moeda'] = moeda
+            .parameters(moeda=currency,
+            dataInicial=start,
+            dataFinalCotacao=end).collect())
+        df_temp['moeda'] = currency
         return df_temp
 
-    if isinstance(moeda, str):
-        df = consultar_bacen(início, fim, moeda)
+    if isinstance(currency, str):
+        df = query_API(start, end, currency)
         return df
-    if isinstance(moeda,list):
+    if isinstance(currency,list):
         df = None
-        for m in moeda:
-            df_temp = consultar_bacen(início, fim, moeda=m)
-
+        for m in currency:
+            df_temp = query_API(start, fim, currency=m)
             if df is not None:
-                df = concat([df, df_temp])
+                df = concat([df, df_temp], ignore_index=True)
             else:
                 df = df_temp.copy()
 
@@ -91,6 +95,7 @@ def obter_cotações(início='1/1/2023', fim='1/31/2023', moeda='USD'):
                 'cotacaoVenda': 'cotação de venda'}
     df.rename(columns=col_nomes, inplace=True)
     # transformar data e hora
+    df['data'] = to_datetime(df['data']).dt.date
     # found examples of duplicated rows in the last day of month
     df.drop_duplicates(inplace=True)
     return df
