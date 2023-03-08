@@ -78,7 +78,7 @@ def get_exchange_rates(start=None, end=None, currency='USD'):
     if isinstance(currency,list):
         df = None
         for m in currency:
-            df_temp = query_API(start, fim, currency=m)
+            df_temp = query_API(start, end, currency=m)
             if df is not None:
                 df = concat([df, df_temp], ignore_index=True)
             else:
