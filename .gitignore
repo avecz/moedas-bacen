@@ -1,3 +1,6 @@
 __pycache__/*
 bacenquery/__pycache__/*
 *.egg-info
+*.egg
+*.pyc
+build/*
