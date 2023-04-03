@@ -55,6 +55,13 @@ def format_date_to_BacenAPI(any_day=None, formato='câmbio'):
         return str(any_day.year)+'-'+str(any_day.month)+'-'+str(any_day.day)
     else:
         return any_day    
+    
+def rolling_cumulative_product(df, window, col_date, col_value):
+    """
+    Return cumulative product of moving windows.
+    """
+    return df.rolling(window=window, on=col_date, min_periods=1)[col_value]\
+        .apply(lambda x: (1+x/100).prod()-1)*100
 
 def get_exchange_rates(start=None, end=None, currency='USD'):
     """
