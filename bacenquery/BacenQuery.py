@@ -33,7 +33,7 @@ def last_day_of_month(any_day):
     # subtracting the number of the current day brings us back one month
     return next_month_date - timedelta(days=next_month_date.day)
 
-def format_date_to_BacenAPI(any_day=None):
+def format_date_to_BacenAPI(any_day=None, formato='câmbio'):
     """
     Take a datetime object, or any
     string that could be parsed to
@@ -48,7 +48,13 @@ def format_date_to_BacenAPI(any_day=None):
     # check if any_day is a datetime object.
     # if it is a string, convert to datetime.
     any_day = check_if_datetime(any_day)
-    return str(any_day.month)+'/'+str(any_day.day)+'/'+str(any_day.year)
+
+    if formato=='câmbio':
+        return str(any_day.month)+'/'+str(any_day.day)+'/'+str(any_day.year)
+    elif (formato=='IPCA' or formato=='IGPM'):
+        return str(any_day.year)+'-'+str(any_day.month)+'-'+str(any_day.day)
+    else:
+        return any_day    
 
 def get_exchange_rates(start=None, end=None, currency='USD'):
     """
