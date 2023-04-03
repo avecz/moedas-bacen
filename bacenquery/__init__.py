@@ -1,1 +1,1 @@
-from bacenquery import BacenQuery
+from . modules import IGPM as IGPM
