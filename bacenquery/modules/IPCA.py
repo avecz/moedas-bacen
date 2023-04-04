@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .functions import format_date_to_BacenAPI, rolling_cumulative_product
+from .base_functions import format_date_to_BacenAPI, rolling_cumulative_product
 from bcb import sgs
 from pandas import DataFrame, concat
 from datetime import datetime
